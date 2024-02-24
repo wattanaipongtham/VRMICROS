@@ -1,0 +1,2 @@
+arm-none-eabi-gcc -c -mcpu=cortex-m3 -mthumb -std=gnu11 {input_file.c} -o {output_file.o}
+arm-none-eabi-gcc -nostdlib -T {input_file.ld} *.o -o {output_file.elf} -Wl,-Map={output_file.map}
