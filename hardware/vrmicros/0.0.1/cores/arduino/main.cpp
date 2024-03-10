@@ -19,6 +19,8 @@
 
 #define VRMICROS_MAIN
 
+extern "C" void clock_init(void) ;
+extern "C" void gpio_init(void) ;
 extern void setup(void) ;
 extern void loop(void) ;
 
@@ -27,6 +29,7 @@ extern void loop(void) ;
  */
 int main(void)
 {
+  clock_init();
   setup();
 
   for (;;) {
