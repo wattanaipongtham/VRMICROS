@@ -124,7 +124,8 @@ recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -c {incl
 ##recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {build.info.flags} {compiler.S.st_extra_flags} {compiler.S.extra_flags} {build.st_extra_flags} {build.extra_flags} {compiler.arm.cmsis.c.flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.cmd}" -nostdlib -T "{runtime.hardware.path}/0.0.1/ldscript.ld" "-Wl,-Map,{build.path}/{build.project_name}.map" -o "{build.path}/{build.project_name}.elf" "{runtime.hardware.path}/0.0.1/startup.o" -Wl,--start-group {object_files} "{archive_file_path}" -Wl,--end-group
+##recipe.c.combine.pattern="{compiler.path}{compiler.c.cmd}" -nostdlib -T "{runtime.hardware.path}/0.0.1/ldscript.ld" -Wl,--entry=Reset_Handler "-Wl,-Map,{build.path}/{build.project_name}.map" "{runtime.hardware.path}/0.0.1/gpio.c.o" -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm "{runtime.hardware.path}/0.0.1/startup.o"  -Wl,--start-group {object_files} "{archive_file_path}" -Wl,--end-group
+recipe.c.combine.pattern=arm-none-eabi-gcc -nostdlib -T "{runtime.hardware.path}/0.0.1/ldscript.ld" "{runtime.hardware.path}/0.0.1/startup.o" {object_files} "{archive_file_path}" "-L{build.path}" -lm -o "{build.path}/{build.project_name}.elf" -Wl,-Map,{build.path}/{build.project_name}.map
 
 ## Create output (.bin file)
 ##recipe.objcopy.bin.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.elf2bin.flags} {compiler.elf2bin.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
