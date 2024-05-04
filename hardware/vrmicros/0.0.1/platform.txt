@@ -36,9 +36,9 @@ recipe.hooks.postbuild.1.pattern="{extras.path}/postbuild.sh" "{build.path}" "{b
 recipe.hooks.postbuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/busybox.exe" sh "{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
 
 ## C Compile Part
-compiler.c.std=gnu17
+compiler.c.std=gnu11
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.extra_flags=-mcpu={build.mcu} -mthumb -fno-exceptions -c
+compiler.extra_flags=-mcpu={build.mcu} -mthumb -fno-exceptions
 compiler.c.flags={compiler.extra_flags} {compiler.warning_flags} -std={compiler.c.std} {compiler.stm.extra_include}
 recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -c {includes} "{source_file}" -o "{object_file}"
 
@@ -124,8 +124,11 @@ recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -c {incl
 ##recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {build.info.flags} {compiler.S.st_extra_flags} {compiler.S.extra_flags} {build.st_extra_flags} {build.extra_flags} {compiler.arm.cmsis.c.flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-##recipe.c.combine.pattern="{compiler.path}{compiler.c.cmd}" -nostdlib -T "{runtime.hardware.path}/0.0.1/ldscript.ld" -Wl,--entry=Reset_Handler "-Wl,-Map,{build.path}/{build.project_name}.map" "{runtime.hardware.path}/0.0.1/gpio.c.o" -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm "{runtime.hardware.path}/0.0.1/startup.o"  -Wl,--start-group {object_files} "{archive_file_path}" -Wl,--end-group
-recipe.c.combine.pattern=arm-none-eabi-gcc -nostdlib -T "{runtime.hardware.path}/0.0.1/ldscript.ld" "{runtime.hardware.path}/0.0.1/startup.o" {object_files} "{archive_file_path}" "-L{build.path}" -lm -o "{build.path}/{build.project_name}.elf" -Wl,-Map,{build.path}/{build.project_name}.map
+##recipe.c.combine.pattern="{compiler.path}{compiler.c.cmd}" -nostdlib -T "{runtime.hardware.path}/0.0.1/ldscript.ld" -Wl,--entry=Reset_Handler "-Wl,-Map,{build.path}/{build.project_name}.map" "{runtime.hardware.path}/0.0.1/gpio.c.o" -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm   -Wl,--start-group {object_files} "{runtime.hardware.path}/0.0.1/startup.o" "{archive_file_path}" -Wl,--end-group
+
+# Link recipe
+# ---------------------
+recipe.c.combine.pattern=arm-none-eabi-gcc -nostdlib  --specs=nosys.specs -T "{runtime.hardware.path}/0.0.1/ldscript.ld" {object_files} {build.path}/core/main.cpp.o {build.path}/core/vrmicros/gpio.c.o {build.path}/core/vrmicros/init.c.o {build.path}/core/vrmicros/startup.c.o {build.path}/core/vrmicros/timebase.c.o "-L{build.path}" -lm -o "{build.path}/{build.project_name}.elf" -Wl,-Map,{build.path}/{build.project_name}.map
 
 ## Create output (.bin file)
 ##recipe.objcopy.bin.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.elf2bin.flags} {compiler.elf2bin.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"

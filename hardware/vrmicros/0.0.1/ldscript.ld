@@ -1,20 +1,18 @@
-/*1.Entry Point*/
+/* Entry Point */
 ENTRY(Reset_Handler)
 
+/* Highest address of the user mode stack */
+_estack = ORIGIN(SRAM) + LENGTH(SRAM); /* end of "RAM" Ram type memory */
 
-/*2.Memory definitions*/
+_Min_Heap_Size = 0x200; /* required amount of heap */
+_Min_Stack_Size = 0x400; /* required amount of stack */
+
+/* Memories definition */
 MEMORY
 {
-	FLASH(rx):ORIGIN =0x08000000,LENGTH =128K
-	SRAM(rwx):ORIGIN =0x20000000,LENGTH =20K
+  SRAM    (rwx)    : ORIGIN = 0x20000000,   LENGTH = 20K
+  FLASH    (rx)    : ORIGIN = 0x08000000,   LENGTH = 64K
 }
-
-_estack = ORIGIN(SRAM)+LENGTH(SRAM);
- 
-/*3.Indicate required head and stack size*/
-
-__max_heap_size = 0x200;
-__max_stack_size = 0x400;
 
 /*Sections*/
 SECTIONS
@@ -32,7 +30,7 @@ SECTIONS
 	    
 
     /*second section of output file*/
-
+	
 	.data :
 	{
 	 . = ALIGN(4);

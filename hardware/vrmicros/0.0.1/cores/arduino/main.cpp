@@ -18,11 +18,14 @@
 */
 
 #define VRMICROS_MAIN
+
 #include "init.c"
 
 extern void setup(void) ;
 extern void loop(void) ;
-
+extern "C" {
+   void timebase_init(void);
+}
 /*
  * \brief Main entry point of Arduino application
  */
@@ -30,6 +33,7 @@ int main(void)
 {
   clock_init();
   gpio_init();
+  timebase_init();
   setup();
 
   for (;;) {

@@ -2,51 +2,39 @@
 
 void clock_init(){
 
-	RCC->CR |= (1U<<0); // Enable HSI
-	RCC->CR |= (1U<<16); // Enable HSE
-	RCC->CR |= (1U<<24); // Enable PLL
+	/*Enable HSE ON*/
+	RCC->CR |= (1U << 16);  
+	while (!(RCC->CR & (1U << 17)));
 
-	RCC->CFGR |= (1U<<0); // Select HSE As System Clock
+	/*Enable Power Clock Interface*/
+	RCC->APB1ENR |= (1U << 28);
 
-	/*Select AHB Prescaler As Not Divided*/
-	RCC->CFGR &= ~(1U<<4);
-	RCC->CFGR &= ~(1U<<5);
-	RCC->CFGR &= ~(1U<<6);
-	RCC->CFGR &= ~(1U<<7);
+	/*Enable Prefetch Buffer*/
+	FLASH->ACR |= (1U << 4);
 
-	/*Select APB1 Prescaler As Divided by 2*/
-	RCC->CFGR &= ~(1U<<8);
-	RCC->CFGR &= ~(1U<<9);
-	RCC->CFGR |= (1U<<10);
+	/*Config Flash Latency as 2 Wait States*/
+	FLASH->ACR |=(2U << 0);
+	
+	/*Disable PLL*/
+	RCC->CR &= ~(1U<<24);
+	while ((RCC->CR & (1U << 25)));
 
-	/*Select APB2 Prescaler As Divided by 1*/
-	RCC->CFGR &= ~(1U<<13);
-	RCC->CFGR &= ~(1U<<12);
-	RCC->CFGR &= ~(1U<<11);
+	/*Select HSE as Clock Source*/
+	RCC->CFGR |= (1U << (16));
 
-	/*Select ADC Prescaler As Divided by 2*/
-	RCC->CFGR &= ~(1U<<14);
-	RCC->CFGR &= ~(1U<<15);
+	/*PREDIV1 Not Divided*/
+	RCC->CFGR &= ~(1U << (17));
 
-	/*Select PLL Clock Source As HSE*/
-	RCC->CFGR |= (1U<<16);
+	/*PLL Miltiply by 9*/
+	RCC->CFGR |= (7U << (18));
 
-	/*Select HSE for PLL Clock Source As Not Divided*/
-	RCC->CFGR &= ~(1U<<17);
+	/*Enable PLL*/
+	RCC->CR |= (1U << 24);
+	while (!(RCC->CR & (1U << 25)));
 
-	/*Select PLL Multiply by 9*/
-	RCC->CFGR &= ~(1U<<21);
-	RCC->CFGR |= (1U<<20);
-	RCC->CFGR |= (1U<<19);
-	RCC->CFGR |= (1U<<18);
-
-	/*Select USB Prescaler As Divided by 1*/
-	RCC->CFGR |= (1U<<22);
-
-	/*Select Microcontroller Out As No Clock*/
-	RCC->CFGR &= ~(1U<<24);
-	RCC->CFGR &= ~(1U<<25);
-	RCC->CFGR &= ~(1U<<26);
+	/*Select PLL as System Clock*/
+	RCC->CFGR |= (2U << 0);
+	while (!(RCC->CFGR & (2U << 2)));
 }
 
 void gpio_init(){
