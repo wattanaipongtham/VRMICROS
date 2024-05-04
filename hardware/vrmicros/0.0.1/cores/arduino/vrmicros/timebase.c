@@ -1,7 +1,7 @@
 /**
  * ************************************************************************
  * @file     	timebase.c
- * @brief    	Timebase for STM32F103
+ * @brief    	Timebase for STM32F103x8
  * @version  	V0.0.1
  * @date     	30 March 2024
  * @author		Wattanai Pongtham <wattanaipongtham@gmail.com>
