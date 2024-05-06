@@ -1,7 +1,16 @@
+/**
+ * ************************************************************************
+ * @file     	gpio.c
+ * @brief    	Digital Input/Output
+ * @version  	V0.0.1
+ * @date     	30 March 2024
+ * @author		Wattanai Pongtham <wattanaipongtham@gmail.com>
+ * ************************************************************************
+ */
+
+#include "pin.h"
 #include "gpio.h"
 
-// PC10(8A) = 1000 1010
-// PULLUP 	= 0001 1000
 void pinMode(int portPin, int mode){
 
 	/*Point to GPIO Port*/
@@ -10,15 +19,15 @@ void pinMode(int portPin, int mode){
 	/*Check if GPIO Register High*/
 	if((portPin & GPIOPin_Msk) - 7 > 0){
 
-		/*Set GPIO Mode to GPIO_CRH*/
+		/*Reset All bit to Zero Then Set GPIO Mode to GPIO_CRH*/
 		gpioRegister->CRH &= ~(0xF << ((((portPin & GPIOPin_Msk) - 7) * 4) - 4));
 		gpioRegister->CRH |= ((mode & MODE_Msk) << ((((portPin & GPIOPin_Msk) - 7) * 4) - 4));
 
 	}else{
 
-		/*Set GPIO Mode to GPIO_CRL*/
-		gpioRegister->CRH &= ~(0xF << ((((portPin & GPIOPin_Msk) - 7) * 4) - 4));
-		gpioRegister->CRL |= ((mode & MODE_Msk) << ((((portPin & GPIOPin_Msk) - 7) * 4) - 4));
+		/*Reset All bit to Zero Then Set GPIO Mode to GPIO_CRL*/
+		gpioRegister->CRL &= ~(0xF << ((((portPin & GPIOPin_Msk)) * 4) - 4));
+		gpioRegister->CRL |= ((mode & MODE_Msk) << ((((portPin & GPIOPin_Msk)) * 4) - 4));
 
 	}
 

@@ -3,13 +3,8 @@
 
 #include "stm32f103xb.h"
 
-#define GPIOPin_Msk			0x0F
-#define GPIOPort_Msk		0xF0
 #define MODE_Msk			0x0F
 #define PULLUP_PULLDOWN_Msk	0xF0
-
-#define PC10	0x8A
-#define PC13	0x8D
 
 #define INPUT	4
 #define	INPUT_PULLUP	24
