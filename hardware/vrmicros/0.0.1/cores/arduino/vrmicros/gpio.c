@@ -27,7 +27,7 @@ void pinMode(int portPin, int mode){
 
 		/*Reset All bit to Zero Then Set GPIO Mode to GPIO_CRL*/
 		gpioRegister->CRL &= ~(0xF << ((((portPin & GPIOPin_Msk)) * 4) - 4));
-		gpioRegister->CRL |= ((mode & MODE_Msk) << ((((portPin & GPIOPin_Msk)) * 4) - 4));
+		gpioRegister->CRL |= ((mode & MODE_Msk) << (((portPin & GPIOPin_Msk)) * 4));
 
 	}
 

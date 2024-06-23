@@ -1,5 +1,16 @@
 #include "init.h"
 
+void Error_Handler(void);
+
+void Error_Handler(void)
+{
+  while (1)
+  {
+    
+  }
+}
+
+
 void clock_init(){
 
 	/*Enable HSE ON*/
@@ -22,8 +33,11 @@ void clock_init(){
 	/*Select HSE as Clock Source*/
 	RCC->CFGR |= (1U << (16));
 
-	/*PREDIV1 Not Divided*/
+	/*HSE Entry for PLL Not Divided*/
 	RCC->CFGR &= ~(1U << (17));
+
+	/*HSE Entry for PLL Not Divided*/
+	RCC->CFGR |= (4U << (8));
 
 	/*PLL Miltiply by 9*/
 	RCC->CFGR |= (7U << (18));
@@ -35,11 +49,22 @@ void clock_init(){
 	/*Select PLL as System Clock*/
 	RCC->CFGR |= (2U << 0);
 	while (!(RCC->CFGR & (2U << 2)));
+
+	/*USBPRE Divided by 1.5*/
+	RCC->CFGR &= ~(1U << 22);
 }
 
 void gpio_init(){
-	/*Enable clock to GPIOA, GPIOB, GPIOC*/
+	/*Enable Clock to GPIOA, GPIOB, GPIOC*/
+	RCC->APB2ENR |= (1U<<0);
 	RCC->APB2ENR |= (1U<<2);
 	RCC->APB2ENR |= (1U<<3);
 	RCC->APB2ENR |= (1U<<4);
+	RCC->APB2ENR |= (1U<<5);
+}
+
+void USB_enable(){
+
+	/*Enable Clock to USB*/
+	RCC->APB1ENR |= (1U<<23);
 }

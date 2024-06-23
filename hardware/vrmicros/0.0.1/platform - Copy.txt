@@ -1,0 +1,188 @@
+# STM32 ARM Core and platform.
+# ------------------------------
+#
+# For more info:
+# https://arduino.github.io/arduino-cli/latest/platform-specification/
+
+name=VRMICROS
+version=0.0.1
+
+# compile variables
+# ----------------------
+
+compiler.warning_flags=-w
+compiler.warning_flags.none=-w
+compiler.warning_flags.default=
+compiler.warning_flags.more=-Wall
+compiler.warning_flags.all=-Wall -Wextra
+
+compiler.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
+
+##compiler.S.cmd=arm-none-eabi-gcc
+compiler.ar.cmd=arm-none-eabi-gcc-ar
+compiler.c.elf.cmd=arm-none-eabi-gcc
+##compiler.objcopy.cmd=arm-none-eabi-objcopy
+compiler.elf2hex.cmd=arm-none-eabi-objcopy
+compiler.libraries.ldflags=
+
+compiler.S.flags={compiler.extra_flags} -c -x assembler-with-cpp {compiler.stm.extra_include}
+
+## Include file path
+compiler.stm.extra_include="-I{build.source.path}" "-I{build.core.path}" "-I{build.core.path}/vrmicros" "-I{build.system.path}/Drivers/CMSIS/Device/ST/STM32F1xx/Include" "-I{build.system.path}/Core" "-I{build.system.path}/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc" "-I{build.system.path}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc" "-I{build.core.path}/USB_DEVICE/Target" "-I{build.system.path}/Drivers/STM32F1xx_HAL_Driver/Inc" "-I{build.system.path}/STM32F1xx"
+
+recipe.preproc.macros.pattern =
+recipe.hooks.prebuild.1.pattern="{extras.path}/prebuild.sh" "{build.path}" "{build.source.path}" "{runtime.platform.path}"
+recipe.hooks.prebuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/busybox.exe" sh "{extras.path}/prebuild.sh" "{build.path}" "{build.source.path}" "{runtime.platform.path}"
+recipe.hooks.postbuild.1.pattern="{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
+recipe.hooks.postbuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/busybox.exe" sh "{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
+
+## C Compile Part
+compiler.c.std=gnu11
+compiler.c.cmd=arm-none-eabi-gcc
+compiler.extra_flags=-mcpu={build.mcu} -mthumb -fno-exceptions
+compiler.c.flags={compiler.extra_flags} {compiler.warning_flags} -std={compiler.c.std} {compiler.stm.extra_include}
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DSTM32F103xB -c {includes} "{source_file}" -o "{object_file}"
+
+## C++ Compile Part
+compiler.cpp.cmd=arm-none-eabi-g++
+compiler.cpp.flags={compiler.extra_flags} -c {compiler.warning_flags} -std={compiler.cpp.std} {compiler.stm.extra_include}
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {includes} "{source_file}" -o "{object_file}"
+
+## Archive Compile Part
+compiler.ar.flags=rcs
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
+
+compiler.c.elf.flags=-mcpu={build.mcu} {build.fpu} {build.float-abi} -mthumb {compiler.optimization_flags} {build.flags.ldspecs} -Wl,--defsym=LD_FLASH_OFFSET={build.flash_offset} -Wl,--defsym=LD_MAX_SIZE={upload.maximum_size} -Wl,--defsym=LD_MAX_DATA_SIZE={upload.maximum_data_size} -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common
+
+compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
+
+compiler.elf2bin.flags=-O binary
+compiler.elf2hex.flags=-O ihex
+
+compiler.size.cmd=arm-none-eabi-size
+compiler.define=-DARDUINO=
+
+# These can be overridden in boards.txt
+build.ldscript=ldscript.ld
+
+# These can be overridden in platform.local.txt
+compiler.cpp.std=gnu++17
+compiler.S.st_extra_flags={build.startup_file}
+
+
+
+# Pre and post build hooks
+build.opt.name=build.opt
+build.opt.path={build.path}/sketch/{build.opt.name}
+
+extras.path={build.system.path}/extras
+
+# Create {build.opt} if not exists in the output sketch dir and force include of SrcWrapper library
+recipe.hooks.prebuild.1.pattern="{extras.path}/prebuild.sh" "{build.path}" "{build.source.path}" "{runtime.platform.path}"
+recipe.hooks.prebuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/busybox.exe" sh "{extras.path}/prebuild.sh" "{build.path}" "{build.source.path}" "{runtime.platform.path}"
+recipe.hooks.postbuild.1.pattern="{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
+recipe.hooks.postbuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/busybox.exe" sh "{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
+
+# compile patterns
+# ---------------------
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DSTM32F103xB -DUSE_HAL_DRIVER -c {includes} "{source_file}" -o "{object_file}"
+## Compile S files
+##recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {build.info.flags} {compiler.S.st_extra_flags} {compiler.S.extra_flags} {build.st_extra_flags} {build.extra_flags} {compiler.arm.cmsis.c.flags} {includes} "{source_file}" -o "{object_file}"
+
+## Combine gc-sections, archives, and objects
+##recipe.c.combine.pattern="{compiler.path}{compiler.c.cmd}" -nostdlib -T "{runtime.hardware.path}/0.0.1/ldscript.ld" -Wl,--entry=Reset_Handler "-Wl,-Map,{build.path}/{build.project_name}.map" "{runtime.hardware.path}/0.0.1/gpio.c.o" -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm   -Wl,--start-group {object_files} "{runtime.hardware.path}/0.0.1/startup.o" "{archive_file_path}" -Wl,--end-group
+
+# Link recipe
+# ---------------------
+recipe.c.combine.pattern=arm-none-eabi-gcc -nostdlib  --specs=nosys.specs -T "{runtime.hardware.path}/0.0.1/ldscript.ld" {object_files} {build.path}/core/main.cpp.o {build.path}/core/vrmicros/gpio.c.o {build.path}/core/vrmicros/init.c.o {build.path}/core/vrmicros/startup.c.o {build.path}/core/vrmicros/timebase.c.o {build.path}/core/USB_DEVICE/App/usb_device.c.o {build.path}/core/USB_DEVICE/App/usbd_cdc_if.c.o {build.path}/core/USB_DEVICE/App/usbd_desc.c.o {build.path}/core/USB_DEVICE/Target/usbd_conf.c.o {build.path}/core/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_core.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c.o {build.path}/core/HAL/stm32f1xx_hal_pcd.c.o {build.path}/core/HAL/stm32f1xx_hal_pcd_ex.c.o {build.path}/core/HAL/stm32f1xx_ll_usb.c.o {build.path}/core/HAL/stm32f1xx_hal_cortex.c.o "-L{build.path}" -lm -o "{build.path}/{build.project_name}.elf" -Wl,-Map,{build.path}/{build.project_name}.map
+
+## Create output (.bin file)
+##recipe.objcopy.bin.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.elf2bin.flags} {compiler.elf2bin.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
+
+## Create output (.hex file)
+##recipe.objcopy.hex.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
+
+build.preferred_out_format=bin
+
+## Save binary
+recipe.output.tmp_file={build.project_name}.{build.preferred_out_format}
+recipe.output.save_file={build.project_name}.{build.board}.{build.preferred_out_format}
+
+## Compute size
+recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
+recipe.size.regex=^(?:\.text|\.data|\.rodata)\s+([0-9]+).*
+recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
+recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
+
+
+# Uploader tool
+# -------------------
+
+# Upload to board via mass storage
+tools.massStorageCopy.cmd=massStorageCopy.sh
+tools.massStorageCopy.cmd.windows=massStorageCopy.bat
+tools.massStorageCopy.path={runtime.tools.STM32Tools.path}/win
+tools.massStorageCopy.path.macosx={runtime.tools.STM32Tools.path}/macosx
+tools.massStorageCopy.path.linux={runtime.tools.STM32Tools.path}/linux
+tools.massStorageCopy.upload.params.verbose=
+tools.massStorageCopy.upload.params.quiet=
+tools.massStorageCopy.upload.pattern="{path}/{cmd}" {upload.verbose} -I "{build.path}/{build.project_name}.bin" -O "{node}"
+
+# STM32CubeProgrammer upload
+tools.stm32CubeProg.path={runtime.tools.STM32Tools.path}
+tools.stm32CubeProg.busybox=
+tools.stm32CubeProg.busybox.windows={path}/win/busybox.exe
+tools.stm32CubeProg.cmd=stm32CubeProg.sh
+tools.stm32CubeProg.upload.params.verbose=
+tools.stm32CubeProg.upload.params.quiet=
+tools.stm32CubeProg.upload.pattern="{busybox}" sh "{path}/{cmd}" {upload.protocol} "{build.path}/{build.project_name}.bin" {build.flash_offset} {upload.options}
+
+# blackmagic upload for generic STM32
+tools.bmp_upload.cmd=arm-none-eabi-gdb
+tools.bmp_upload.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/bin
+tools.bmp_upload.upload.speed=230400
+tools.bmp_upload.upload.params.verbose=-batch
+tools.bmp_upload.upload.params.quiet=--batch-silent
+tools.bmp_upload.upload.pattern="{path}/{cmd}" -nx -b {upload.speed} {upload.verbose} -ex "set confirm off" -ex "target extended-remote {serial.port}" -ex "monitor swdp_scan" -ex "attach 1" -ex "load" -ex "compare-sections" -ex "kill" "{build.path}/{build.project_name}.elf"
+tools.bmp_upload.upload.pattern.windows="{path}/{cmd}" -nx -b {upload.speed} {upload.verbose} -ex "set confirm off" -ex "target extended-remote \\.\{serial.port}" -ex "monitor swdp_scan" -ex "attach 1" -ex "load" -ex "compare-sections" -ex "kill" "{build.path}/{build.project_name}.elf"
+
+# HID flash 2.2 (HID bootloader v2.2 for STM32F1 and STM32F4 series)
+tools.hid_upload.cmd=hid-flash
+tools.hid_upload.cmd.windows=hid-flash.exe
+tools.hid_upload.path={runtime.tools.STM32Tools.path}/win
+tools.hid_upload.path.macosx={runtime.tools.STM32Tools.path}/macosx
+tools.hid_upload.path.linux={runtime.tools.STM32Tools.path}/linux
+tools.hid_upload.upload.params.verbose=-d
+tools.hid_upload.upload.params.quiet=n
+tools.hid_upload.upload.pattern="{path}/{cmd}" "{build.path}/{build.project_name}.bin" {serial.port.file}
+
+# Upload using Maple bootloader over DFU
+tools.maple_upload.script=maple_upload.sh
+tools.maple_upload.busybox=
+tools.maple_upload.busybox.windows={path}/win/busybox.exe
+tools.maple_upload.path={runtime.tools.STM32Tools.path}
+tools.maple_upload.upload.params.verbose=-d
+tools.maple_upload.upload.params.quiet=n
+tools.maple_upload.upload.pattern="{busybox}" sh "{path}/{script}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
+
+# STM32MP1 self-contained shell script
+tools.remoteproc_gen.path={runtime.tools.STM32Tools.path}
+tools.remoteproc_gen.busybox=
+tools.remoteproc_gen.busybox.windows={path}/win/busybox.exe
+tools.remoteproc_gen.script=run_arduino_gen.sh
+tools.remoteproc_gen.upload.params.verbose=
+tools.remoteproc_gen.upload.params.quiet=
+tools.remoteproc_gen.upload.pattern="{busybox}" sh "{path}/{script}" generate "{build.path}/{build.project_name}.elf" "{build.path}/run_arduino_{build.project_name}.sh"
+
+# Debugger configuration (general options)
+# ----------------------------------------
+# EXPERIMENTAL feature:
+# - this is alpha and may be subject to change without notice
+debug.executable={build.path}/{build.project_name}.elf
+debug.toolchain=gcc
+debug.toolchain.path={compiler.path}
+debug.toolchain.prefix=arm-none-eabi-
+debug.server=openocd
+debug.server.openocd.path={runtime.tools.xpack-openocd-0.12.0-1.path}/bin/openocd
+debug.server.openocd.scripts_dir={runtime.tools.xpack-openocd-0.12.0-1.path}/openocd/scripts
+debug.server.openocd.script={build.path}/openocd.cfg

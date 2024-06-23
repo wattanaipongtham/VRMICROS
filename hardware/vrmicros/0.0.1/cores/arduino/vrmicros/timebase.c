@@ -59,7 +59,7 @@ void timebase_init(void){
 	/*Enable systick*/
 	SysTick->CTRL |= CTRL_EN;
 
-	//while(!(SysTick->CTRL & CTRL_EN)){}
+	while(!(SysTick->CTRL & CTRL_EN)){}
 
 	/*Enable global interrupts*/
 	__enable_irq();

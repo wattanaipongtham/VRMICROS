@@ -7,104 +7,6 @@
 name=VRMICROS
 version=0.0.1
 
-# compile variables
-# ----------------------
-
-compiler.warning_flags=-w
-compiler.warning_flags.none=-w
-compiler.warning_flags.default=
-compiler.warning_flags.more=-Wall
-compiler.warning_flags.all=-Wall -Wextra
-
-compiler.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
-
-##compiler.S.cmd=arm-none-eabi-gcc
-compiler.ar.cmd=arm-none-eabi-gcc-ar
-compiler.c.elf.cmd=arm-none-eabi-gcc
-##compiler.objcopy.cmd=arm-none-eabi-objcopy
-compiler.elf2hex.cmd=arm-none-eabi-objcopy
-compiler.libraries.ldflags=
-
-compiler.S.flags={compiler.extra_flags} -c -x assembler-with-cpp {compiler.stm.extra_include}
-
-## Include file path
-compiler.stm.extra_include="-I{build.source.path}" "-I{build.core.path}" "-I{build.core.path}/vrmicros" "-I{build.system.path}/Drivers/CMSIS/Device/ST/STM32F1xx/Include" "-I{build.system.path}/Core"
-recipe.preproc.macros.pattern =
-recipe.hooks.prebuild.1.pattern="{extras.path}/prebuild.sh" "{build.path}" "{build.source.path}" "{runtime.platform.path}"
-recipe.hooks.prebuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/busybox.exe" sh "{extras.path}/prebuild.sh" "{build.path}" "{build.source.path}" "{runtime.platform.path}"
-recipe.hooks.postbuild.1.pattern="{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
-recipe.hooks.postbuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/busybox.exe" sh "{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
-
-## C Compile Part
-compiler.c.std=gnu11
-compiler.c.cmd=arm-none-eabi-gcc
-compiler.extra_flags=-mcpu={build.mcu} -mthumb -fno-exceptions
-compiler.c.flags={compiler.extra_flags} {compiler.warning_flags} -std={compiler.c.std} {compiler.stm.extra_include}
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -c {includes} "{source_file}" -o "{object_file}"
-
-## C++ Compile Part
-compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags={compiler.extra_flags} -c {compiler.warning_flags} -std={compiler.cpp.std} {compiler.stm.extra_include}
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {includes} "{source_file}" -o "{object_file}"
-
-## Archive Compile Part
-compiler.ar.flags=rcs
-recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
-
-compiler.c.elf.flags=-mcpu={build.mcu} {build.fpu} {build.float-abi} -mthumb {compiler.optimization_flags} {build.flags.ldspecs} -Wl,--defsym=LD_FLASH_OFFSET={build.flash_offset} -Wl,--defsym=LD_MAX_SIZE={upload.maximum_size} -Wl,--defsym=LD_MAX_DATA_SIZE={upload.maximum_data_size} -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common
-
-compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
-
-compiler.elf2bin.flags=-O binary
-compiler.elf2hex.flags=-O ihex
-
-compiler.size.cmd=arm-none-eabi-size
-compiler.define=-DARDUINO=
-
-# These can be overridden in boards.txt
-build.ldscript=ldscript.ld
-
-# These can be overridden in platform.local.txt
-compiler.cpp.std=gnu++17
-compiler.S.st_extra_flags={build.startup_file}
-
-# USB Flags
-# ---------
-build.usb_flags=-DUSBCON {build.usb_speed} -DUSBD_VID={build.vid} -DUSBD_PID={build.pid} -DHAL_PCD_MODULE_ENABLED
-
-# Specify defaults for vid/pid, since an empty value is impossible to
-# detect in the preprocessor, but a 0 can be checked for.
-# Boards should specify either both, or neither of these.
-build.vid=0
-build.pid=0
-
-# To customize the USB manufacturer or product string, must add defines
-# for them, e.g.:
-#    some_board.build.extra_flags='-DUSB_MANUFACTURER_STRING="My Company"' '-DUSB_PRODUCT_STRING="My Product"'
-# This cannot be done using build variables and specifying the -D
-# options here, since then the default would be a defined, but empty macro
-# that the preprocessor cannot detect.
-
-# VirtIO RPMsg Serial Flags
-build.virtio_flags=-DVIRTIOCON -DNO_ATOMIC_64_SUPPORT -DMETAL_INTERNAL -DMETAL_MAX_DEVICE_REGIONS=2 -DVIRTIO_SLAVE_ONLY -DVIRTIO_LOG
-build.virtio_extra_include="-I{build.system.path}/Middlewares/OpenAMP" "-I{build.system.path}/Middlewares/OpenAMP/open-amp/lib/include" "-I{build.system.path}/Middlewares/OpenAMP/libmetal/lib/include" "-I{build.system.path}/Middlewares/OpenAMP/virtual_driver"
-
-# Build information's
-build.info.flags=-D{build.series} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -DBOARD_NAME="{build.board}"
-
-# Defaults config
-build.xSerial=-DHAL_UART_MODULE_ENABLED
-build.enable_usb=
-build.usb_speed=
-build.enable_virtio=
-build.peripheral_pins=
-build.startup_file=
-build.fpu=
-build.float-abi=
-build.flags.optimize=-Os
-build.flags.debug=-DNDEBUG
-build.flags.ldspecs=--specs=nano.specs
-
 # Pre and post build hooks
 build.opt.name=build.opt
 build.opt.path={build.path}/sketch/{build.opt.name}
@@ -117,18 +19,35 @@ recipe.hooks.prebuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/bus
 recipe.hooks.postbuild.1.pattern="{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
 recipe.hooks.postbuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/busybox.exe" sh "{extras.path}/postbuild.sh" "{build.path}" "{build.series}" "{runtime.platform.path}"
 
-# compile patterns
-# ---------------------
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -c {includes} "{source_file}" -o "{object_file}"
-## Compile S files
-##recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} {build.info.flags} {compiler.S.st_extra_flags} {compiler.S.extra_flags} {build.st_extra_flags} {build.extra_flags} {compiler.arm.cmsis.c.flags} {includes} "{source_file}" -o "{object_file}"
+## C Compile Part
+compiler.c.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
+compiler.c.cmd=arm-none-eabi-gcc
+compiler.c.flags=-mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -DSTM32 -DSTM32F1 -DSTM32F103C8Tx
+compiler.c.include_path="-I{build.core.path}" "-I{build.core.path}/vrmicros" "-I{build.system.path}/Drivers/CMSIS/Device/ST/STM32F1xx/Include" "-I{build.system.path}/Drivers/CMSIS/Include" "-I{build.core.path}/STM32F1xx_HAL_Driver" "-I{build.core.path}/STM32F1xx_HAL_Driver/Inc" "-I{build.core.path}/STM32F1xx_HAL_Driver/Inc/Legacy" "-I{build.core.path}/STM32F1xx_HAL_Driver/Src" "-I{build.core.path}/STM32_USB_Device_Library/Class/CDC/Inc" "-I{build.core.path}/STM32_USB_Device_Library/Class/CDC/Src" "-I{build.core.path}/STM32_USB_Device_Library/Core/Inc" "-I{build.core.path}/STM32_USB_Device_Library/Core/Src" "-I{build.core.path}/USB_DEVICE/App" "-I{build.core.path}/USB_DEVICE/Target"
+recipe.c.o.pattern="{compiler.c.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.c.include_path} {includes} -c "{source_file}" -o "{object_file}"
 
-## Combine gc-sections, archives, and objects
-##recipe.c.combine.pattern="{compiler.path}{compiler.c.cmd}" -nostdlib -T "{runtime.hardware.path}/0.0.1/ldscript.ld" -Wl,--entry=Reset_Handler "-Wl,-Map,{build.path}/{build.project_name}.map" "{runtime.hardware.path}/0.0.1/gpio.c.o" -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm   -Wl,--start-group {object_files} "{runtime.hardware.path}/0.0.1/startup.o" "{archive_file_path}" -Wl,--end-group
+## C++ Compile Part
+compiler.cpp.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
+compiler.cpp.cmd=arm-none-eabi-g++
+compiler.cpp.flags=-mcpu=cortex-m3 -std=gnu++11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -DSTM32 -DSTM32F1 -DSTM32F103C8Tx
+compiler.cpp.include_path="-I{build.core.path}" "-I{build.core.path}/vrmicros" "-I{build.system.path}/Drivers/CMSIS/Device/ST/STM32F1xx/Include" "-I{build.system.path}/Drivers/CMSIS/Include" "-I{build.core.path}/STM32F1xx_HAL_Driver/Inc" "-I{build.core.path}/STM32F1xx_HAL_Driver/Inc/Legacy" "-I{build.core.path}/STM32F1xx_HAL_Driver/Src" "-I{build.core.path}/STM32_USB_Device_Library/Class/CDC/Inc" "-I{build.core.path}/STM32_USB_Device_Library/Class/CDC/Src" "-I{build.core.path}/STM32_USB_Device_Library/Core/Inc" "-I{build.core.path}/STM32_USB_Device_Library/Core/Src" "-I{build.core.path}/USB_DEVICE/App" "-I{build.core.path}/USB_DEVICE/Target"
+recipe.cpp.o.pattern="{compiler.cpp.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.cpp.include_path} -c "{source_file}" -o "{object_file}"
+
+## Assembly Compile Part
+compiler.S.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
+compiler.S.cmd=arm-none-eabi-gcc
+compiler.S.flags=-mcpu=cortex-m3 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"{build.core.path}/startup_stm32f103c8tx.d" -MT"{build.core.path}/startup_stm32f103c8tx.o" --specs=nano.specs -mfloat-abi=soft -mthumb
+recipe.S.o.pattern="{compiler.S.path}{compiler.S.cmd}" {compiler.S.flags} "{source_file}" -o "{object_file}"
+
+## Archive File
+compiler.ar.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
+compiler.ar.cmd=arm-none-eabi-gcc-ar
+compiler.ar.flags=rcs
+recipe.ar.pattern="{compiler.ar.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
 
 # Link recipe
 # ---------------------
-recipe.c.combine.pattern=arm-none-eabi-gcc -nostdlib  --specs=nosys.specs -T "{runtime.hardware.path}/0.0.1/ldscript.ld" {object_files} {build.path}/core/main.cpp.o {build.path}/core/vrmicros/gpio.c.o {build.path}/core/vrmicros/init.c.o {build.path}/core/vrmicros/startup.c.o {build.path}/core/vrmicros/timebase.c.o "-L{build.path}" -lm -o "{build.path}/{build.project_name}.elf" -Wl,-Map,{build.path}/{build.project_name}.map
+recipe.c.combine.pattern=arm-none-eabi-gcc -o "{build.path}/USB_CDC_Bare-metal_init.elf" {object_files} {build.path}/core/main.cpp.o {runtime.hardware.path}/0.0.1/startup_stm32f103c8tx.o {build.path}/core/vrmicros/gpio.c.o {build.path}/core/vrmicros/init.c.o {build.path}/core/vrmicros/timebase.c.o {build.path}/core/USB_DEVICE/App/usb_device.c.o {build.path}/core/USB_DEVICE/App/usbd_cdc_if.c.o {build.path}/core/USB_DEVICE/App/usbd_desc.c.o {build.path}/core/USB_DEVICE/Target/usbd_conf.c.o {build.path}/core/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_core.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/stm32f1xx_hal_msp.c.o {build.path}/core/STM32F1xx_HAL_Driver/system_stm32f1xx.c.o {build.path}/core/STM32F1xx_HAL_Driver/stm32f1xx_it.c.o {build.path}/core/STM32F1xx_HAL_Driver/syscalls.c.o {build.path}/core/STM32F1xx_HAL_Driver/sysmem.c.o -mcpu=cortex-m3 -T "{runtime.hardware.path}/0.0.1/STM32F103C8TX_FLASH.ld" -fno-exceptions --specs=nosys.specs -Wl,-Map=USB_CDC_Bare-metal_init.map -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb  -lc -lm
 
 ## Create output (.bin file)
 ##recipe.objcopy.bin.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.elf2bin.flags} {compiler.elf2bin.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
@@ -143,7 +62,7 @@ recipe.output.tmp_file={build.project_name}.{build.preferred_out_format}
 recipe.output.save_file={build.project_name}.{build.board}.{build.preferred_out_format}
 
 ## Compute size
-recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
+recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/USB_CDC_Bare-metal_init.elf"
 recipe.size.regex=^(?:\.text|\.data|\.rodata)\s+([0-9]+).*
 recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*

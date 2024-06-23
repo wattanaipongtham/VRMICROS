@@ -51,5 +51,12 @@ SECTIONS
 	_ebss = .;  /*Create a global symbol to hold end of bss section*/
 	}> SRAM
 	
-
+	.ARM : 
+	{
+    	. = ALIGN(4);
+    	__exidx_start = .;
+    	*(.ARM.exidx*)
+    	__exidx_end = .;
+    	. = ALIGN(4);
+  	} >FLASH
 }

@@ -24,7 +24,7 @@ int analogRead(int portPin){
 	}else{
 
 		/*Set Analog Mode to GPIO_CRL*/
-		gpioRegister->CRL &= ~(0xF << ((((portPin & GPIOPin_Msk)) * 4) - 4));
+		gpioRegister->CRL &= ~(0xF << ((portPin & GPIOPin_Msk) * 4));
 
 	}
 
@@ -37,6 +37,20 @@ int analogRead(int portPin){
 	/*Select Single Mode*/
 	ADC1->CR2 &= ~(1U << 1);
 
-	/**/
+	/*Assign ADC Channel to First Conversion*/
 	ADC1->SQR3 |= ((portPin & GPIOPin_Msk) << 0);
+
+	/*Enable ADC*/
+	ADC1->CR2 |= (1 << 0);
+
+	/*Start Conversion*/
+	ADC1->CR2 |= (1U << 22);
+
+	/*Enable ADC*/
+	ADC1->CR2 |= (1 << 0);
+
+	/*Wait Until Finished Conversion*/
+	while(!(ADC1->SR & (1U << 1)));
+
+	return ADC1->DR;
 }

@@ -26,6 +26,9 @@ extern void loop(void) ;
 extern "C" {
    void timebase_init(void);
 }
+extern "C" {
+   void MX_USB_DEVICE_Init(void);
+}
 /*
  * \brief Main entry point of Arduino application
  */
@@ -34,6 +37,8 @@ int main(void)
   clock_init();
   gpio_init();
   timebase_init();
+  USB_enable();
+  MX_USB_DEVICE_Init();
   setup();
 
   for (;;) {

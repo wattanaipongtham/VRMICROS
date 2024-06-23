@@ -18,6 +18,7 @@ extern uint32_t _edata;
 extern uint32_t _sbss;
 extern uint32_t _ebss;
 
+void Error_Handler(void);
 void Reset_Handler(void);
 int main(void);
 
@@ -209,4 +210,12 @@ void Reset_Handler(void)
 	
 	
 	main();
+}
+
+void Error_Handler(void)
+{
+  while (1)
+  {
+    
+  }
 }
