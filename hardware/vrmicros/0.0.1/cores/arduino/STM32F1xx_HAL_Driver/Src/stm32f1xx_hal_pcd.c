@@ -866,10 +866,10 @@ HAL_StatusTypeDef HAL_PCD_Start(PCD_HandleTypeDef *hpcd)
   __HAL_PCD_ENABLE(hpcd);
 
 #if defined (USB)
-  //HAL_PCDEx_SetConnectionState(hpcd, 1U);
+  HAL_PCDEx_SetConnectionState(hpcd, 1U);
 #endif /* defined (USB) */
 
-  //(void)USB_DevConnect(hpcd->Instance);
+  (void)USB_DevConnect(hpcd->Instance);
   __HAL_UNLOCK(hpcd);
 
   return HAL_OK;
