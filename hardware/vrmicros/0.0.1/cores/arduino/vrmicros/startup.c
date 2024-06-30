@@ -9,7 +9,7 @@ openocd -f board/st_nucleo_f4.cfg
 **/
 
 #include <stdint.h>
-int test_dfl = 0;
+uint32_t test_dfl = 10;
 
 extern uint32_t _estack;
 extern uint32_t _etext;
@@ -153,7 +153,7 @@ void Default_Handler(void)
 	while(1)
 	{
 		//Do nothing...
-		test_dfl = 1;
+		test_dfl = 254;
 	}
 }
 
@@ -191,6 +191,6 @@ void Error_Handler(void)
 {
   while (1)
   {
-    
+    test_dfl = 254;
   }
 }

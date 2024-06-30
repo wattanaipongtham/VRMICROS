@@ -1948,7 +1948,7 @@ HAL_StatusTypeDef USB_CoreInit(USB_TypeDef *USBx, USB_CfgTypeDef cfg)
   * @param  USBx Selected device
   * @retval HAL status
   */
-HAL_StatusTypeDef USB_EnableGlobalInt(USB_TypeDef *USBx)
+HAL_StatusTypeDef 
 {
   uint32_t winterruptmask;
 

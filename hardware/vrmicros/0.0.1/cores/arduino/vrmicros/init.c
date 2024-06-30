@@ -1,6 +1,6 @@
 #include "init.h"
 
-/*void Error_Handler(void);
+void Error_Handler(void);
 
 void Error_Handler(void)
 {
@@ -8,7 +8,7 @@ void Error_Handler(void)
   {
     
   }
-}*/
+}
 
 
 void clock_init(){

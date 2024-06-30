@@ -37,8 +37,11 @@ int main(void)
   clock_init();
   gpio_init();
   timebase_init();
+
   USB_enable();
+  
   MX_USB_DEVICE_Init();
+
   setup();
 
   for (;;) {
