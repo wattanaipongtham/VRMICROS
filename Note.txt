@@ -1,0 +1,23 @@
+https://stackoverflow.com/questions/54939948/stm32-usb-cdc-after-hardware-reset
+
+#include <stdint.h>
+#include <string.h>
+#include "usbd_cdc_if.h"
+
+char msg[40] = "hello world\n\r";
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(PC13, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  digitalWrite(PC13, HIGH);
+  delay(100);
+
+  CDC_Transmit_FS((uint8_t*)msg, strlen(msg));
+
+  digitalWrite(PC13, LOW);
+  delay(100);
+}
