@@ -20,7 +20,4 @@ void delay(uint32_t);
 uint32_t get_tick(void);
 static void tick_increment(void);
 
-volatile uint32_t g_curr_tick;
-volatile uint32_t g_curr_tick_p;
-
 #endif

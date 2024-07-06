@@ -1,4 +1,5 @@
 #include "init.h"
+#include "timebase.h"
 
 void Error_Handler(void);
 
@@ -61,6 +62,23 @@ void gpio_init(){
 	RCC->APB2ENR |= (1U<<3);
 	RCC->APB2ENR |= (1U<<4);
 	RCC->APB2ENR |= (1U<<5);
+
+	/*Config PA12(USB_DP Pin) as Ouput Push-Pull 50Mhz*/
+	GPIOA->CRH |= (1U<<16);
+	GPIOA->CRH |= (1U<<17);
+	GPIOA->CRH &= ~(1U<<18);
+	GPIOA->CRH &= ~(1U<<19);
+
+	/*Reset USB_DP Pin to LOW*/
+	GPIOA->ODR &= ~(1U<<12);
+
+	delay(5);
+
+	/*Init USB_DP Pin as Alternate Push-Pull 50Mhz*/
+	GPIOA->CRH |= (1U<<16);
+	GPIOA->CRH |= (1U<<17);
+	GPIOA->CRH &= ~(1U<<18);
+	GPIOA->CRH = (1U<<19);
 }
 
 void USB_enable(){

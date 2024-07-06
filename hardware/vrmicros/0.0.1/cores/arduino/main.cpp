@@ -19,24 +19,25 @@
 
 #define VRMICROS_MAIN
 
-#include "init.c"
+extern void setup(void);
+extern void loop(void);
 
-extern void setup(void) ;
-extern void loop(void) ;
 extern "C" {
-   void timebase_init(void);
+  void clock_init(void);
+  void gpio_init(void);
+  void USB_enable(void);
+  void timebase_init(void);
+  void MX_USB_DEVICE_Init(void);
 }
-extern "C" {
-   void MX_USB_DEVICE_Init(void);
-}
+
 /*
  * \brief Main entry point of Arduino application
  */
 int main(void)
 {
   clock_init();
-  gpio_init();
   timebase_init();
+  gpio_init();
 
   USB_enable();
   

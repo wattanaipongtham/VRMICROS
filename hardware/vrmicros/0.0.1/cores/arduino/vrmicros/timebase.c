@@ -10,6 +10,9 @@
 
 #include "timebase.h"
 
+volatile uint32_t g_curr_tick;
+volatile uint32_t g_curr_tick_p;
+
 void delay(uint32_t delay){
 	uint32_t tick_start = get_tick();
 	uint32_t wait = delay;
