@@ -6,13 +6,20 @@
 extern "C"{
 	void delay(uint32_t);
 }
+uint8_t print_buf[128];
+int i=0;
 void Serial::print(const char* msg){
-	CDC_Transmit_FS((uint8_t*)msg, strlen(msg));
-	delay(1);
+	while(i<strlen(msg)){
+		print_buf[i] = *msg;
+		msg++;
+	}
+	//sprintf(print, "%s", msg);
+	CDC_Transmit_FS((uint8_t*)print, strlen(print));
+	while(!((USB->ISTR)&(1U<<15))){}
 }
 void Serial::println(const char* msg){
 	char* serialMsg;
 	sprintf(serialMsg, "%s\r\n", msg);
 	CDC_Transmit_FS((uint8_t*)serialMsg, strlen(serialMsg));
-	delay(1);
+	while(!((USB->ISTR)&(1U<<15))){}
 }
