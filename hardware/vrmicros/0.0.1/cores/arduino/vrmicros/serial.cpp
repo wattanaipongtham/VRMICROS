@@ -2,24 +2,28 @@
 #include <stdint.h>
 #include <string>
 #include "usbd_cdc_if.h"
-//#include "timebase.h"
+
+#define crnl "\r\n"
 extern "C"{
 	void delay(uint32_t);
 }
-uint8_t print_buf[128];
+
 int i=0;
+
 void Serial::print(const char* msg){
-	while(i<strlen(msg)){
-		print_buf[i] = *msg;
-		msg++;
-	}
-	//sprintf(print, "%s", msg);
-	CDC_Transmit_FS((uint8_t*)print, strlen(print));
-	while(!((USB->ISTR)&(1U<<15))){}
+	uint8_t* print_buf[128];
+	uint8_t len = strlen(msg);
+
+	memcpy(print_buf, msg, strlen(msg));
+
+	CDC_Transmit_FS((uint8_t*)print_buf, len);
 }
 void Serial::println(const char* msg){
-	char* serialMsg;
-	sprintf(serialMsg, "%s\r\n", msg);
-	CDC_Transmit_FS((uint8_t*)serialMsg, strlen(serialMsg));
-	while(!((USB->ISTR)&(1U<<15))){}
+	uint8_t* println_buf[128];
+	uint8_t len = strlen(msg);
+
+	memcpy(println_buf, msg, strlen(msg));
+	memcpy(println_buf+len, "\r\n", 2);
+	
+	CDC_Transmit_FS((uint8_t*)println_buf, len+2);
 }
