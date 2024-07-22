@@ -47,7 +47,7 @@ recipe.ar.pattern="{compiler.ar.path}{compiler.ar.cmd}" {compiler.ar.flags} "{ar
 
 # Link recipe
 # ---------------------
-recipe.c.combine.pattern=arm-none-eabi-gcc -o "{build.path}/USB_CDC_Bare-metal_init.elf" {object_files} {build.path}/core/main.cpp.o {runtime.hardware.path}/0.0.1/startup_stm32f103c8tx.o {build.path}/core/vrmicros/serial.cpp.o {build.path}/core/vrmicros/gpio.c.o {build.path}/core/vrmicros/init.c.o {build.path}/core/vrmicros/timebase.c.o {build.path}/core/USB_DEVICE/App/usb_device.c.o {build.path}/core/USB_DEVICE/App/usbd_cdc_if.c.o {build.path}/core/USB_DEVICE/App/usbd_desc.c.o {build.path}/core/USB_DEVICE/Target/usbd_conf.c.o {build.path}/core/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_core.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/stm32f1xx_hal_msp.c.o {build.path}/core/STM32F1xx_HAL_Driver/system_stm32f1xx.c.o {build.path}/core/STM32F1xx_HAL_Driver/stm32f1xx_it.c.o {build.path}/core/STM32F1xx_HAL_Driver/syscalls.c.o {build.path}/core/STM32F1xx_HAL_Driver/sysmem.c.o -mcpu=cortex-m3 -T "{runtime.hardware.path}/0.0.1/STM32F103C8TX_FLASH.ld" -fno-exceptions --specs=nosys.specs -Wl,-Map={build.path}/USB_CDC_Bare-metal_init.map -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb  -lc -lm
+recipe.c.combine.pattern=arm-none-eabi-gcc -o "{build.path}/USB_CDC_Bare-metal_init.elf" {object_files} {build.path}/core/main.cpp.o {runtime.hardware.path}/0.0.1/startup_stm32f103c8tx.o {build.path}/core/vrmicros/serial.cpp.o {build.path}/core/vrmicros/gpio.c.o {build.path}/core/vrmicros/init.c.o {build.path}/core/vrmicros/timebase.c.o {build.path}/core/USB_DEVICE/App/usb_device.c.o {build.path}/core/USB_DEVICE/App/usbd_cdc_if.c.o {build.path}/core/USB_DEVICE/App/usbd_desc.c.o {build.path}/core/USB_DEVICE/Target/usbd_conf.c.o {build.path}/core/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_core.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c.o {build.path}/core/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.o {build.path}/core/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.o {build.path}/core/STM32F1xx_HAL_Driver/stm32f1xx_hal_msp.c.o {build.path}/core/STM32F1xx_HAL_Driver/system_stm32f1xx.c.o {build.path}/core/STM32F1xx_HAL_Driver/stm32f1xx_it.c.o {build.path}/core/STM32F1xx_HAL_Driver/syscalls.c.o {build.path}/core/STM32F1xx_HAL_Driver/sysmem.c.o -mcpu=cortex-m3 -T "{runtime.hardware.path}/0.0.1/STM32F103C8TX_FLASH.ld" -fno-exceptions --specs=nosys.specs -Wl,-Map={build.path}/USB_CDC_Bare-metal_init.map -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb  -lc -lm -Wl,--print-memory-usage
 
 ## Create output (.bin file)
 ##recipe.objcopy.bin.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.elf2bin.flags} {compiler.elf2bin.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
@@ -58,29 +58,19 @@ recipe.c.combine.pattern=arm-none-eabi-gcc -o "{build.path}/USB_CDC_Bare-metal_i
 build.preferred_out_format=bin
 
 ## Save binary
-recipe.output.tmp_file={build.project_name}.{build.preferred_out_format}
-recipe.output.save_file={build.project_name}.{build.board}.{build.preferred_out_format}
+recipe.output.tmp_file={build.path}{build.project_name}.bin
+recipe.output.save_file={build.path}{build.project_name}.bin
 
 ## Compute size
-recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/USB_CDC_Bare-metal_init.elf"
+compiler.size.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
+compiler.size.cmd=arm-none-eabi-size
+recipe.size.pattern="{compiler.size.path}{compiler.size.cmd}" -A {build.path}/USB_CDC_Bare-metal_init.elf
 recipe.size.regex=^(?:\.text|\.data|\.rodata)\s+([0-9]+).*
 recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
-recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
 
 
 # Uploader tool
 # -------------------
-
-# Upload to board via mass storage
-tools.massStorageCopy.cmd=massStorageCopy.sh
-tools.massStorageCopy.cmd.windows=massStorageCopy.bat
-tools.massStorageCopy.path={runtime.tools.STM32Tools.path}/win
-tools.massStorageCopy.path.macosx={runtime.tools.STM32Tools.path}/macosx
-tools.massStorageCopy.path.linux={runtime.tools.STM32Tools.path}/linux
-tools.massStorageCopy.upload.params.verbose=
-tools.massStorageCopy.upload.params.quiet=
-tools.massStorageCopy.upload.pattern="{path}/{cmd}" {upload.verbose} -I "{build.path}/{build.project_name}.bin" -O "{node}"
-
 # STM32CubeProgrammer upload
 tools.stm32CubeProg.path={runtime.tools.STM32Tools.path}
 tools.stm32CubeProg.busybox=
@@ -89,53 +79,3 @@ tools.stm32CubeProg.cmd=stm32CubeProg.sh
 tools.stm32CubeProg.upload.params.verbose=
 tools.stm32CubeProg.upload.params.quiet=
 tools.stm32CubeProg.upload.pattern="{busybox}" sh "{path}/{cmd}" {upload.protocol} "{build.path}/{build.project_name}.bin" {build.flash_offset} {upload.options}
-
-# blackmagic upload for generic STM32
-tools.bmp_upload.cmd=arm-none-eabi-gdb
-tools.bmp_upload.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/bin
-tools.bmp_upload.upload.speed=230400
-tools.bmp_upload.upload.params.verbose=-batch
-tools.bmp_upload.upload.params.quiet=--batch-silent
-tools.bmp_upload.upload.pattern="{path}/{cmd}" -nx -b {upload.speed} {upload.verbose} -ex "set confirm off" -ex "target extended-remote {serial.port}" -ex "monitor swdp_scan" -ex "attach 1" -ex "load" -ex "compare-sections" -ex "kill" "{build.path}/{build.project_name}.elf"
-tools.bmp_upload.upload.pattern.windows="{path}/{cmd}" -nx -b {upload.speed} {upload.verbose} -ex "set confirm off" -ex "target extended-remote \\.\{serial.port}" -ex "monitor swdp_scan" -ex "attach 1" -ex "load" -ex "compare-sections" -ex "kill" "{build.path}/{build.project_name}.elf"
-
-# HID flash 2.2 (HID bootloader v2.2 for STM32F1 and STM32F4 series)
-tools.hid_upload.cmd=hid-flash
-tools.hid_upload.cmd.windows=hid-flash.exe
-tools.hid_upload.path={runtime.tools.STM32Tools.path}/win
-tools.hid_upload.path.macosx={runtime.tools.STM32Tools.path}/macosx
-tools.hid_upload.path.linux={runtime.tools.STM32Tools.path}/linux
-tools.hid_upload.upload.params.verbose=-d
-tools.hid_upload.upload.params.quiet=n
-tools.hid_upload.upload.pattern="{path}/{cmd}" "{build.path}/{build.project_name}.bin" {serial.port.file}
-
-# Upload using Maple bootloader over DFU
-tools.maple_upload.script=maple_upload.sh
-tools.maple_upload.busybox=
-tools.maple_upload.busybox.windows={path}/win/busybox.exe
-tools.maple_upload.path={runtime.tools.STM32Tools.path}
-tools.maple_upload.upload.params.verbose=-d
-tools.maple_upload.upload.params.quiet=n
-tools.maple_upload.upload.pattern="{busybox}" sh "{path}/{script}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
-
-# STM32MP1 self-contained shell script
-tools.remoteproc_gen.path={runtime.tools.STM32Tools.path}
-tools.remoteproc_gen.busybox=
-tools.remoteproc_gen.busybox.windows={path}/win/busybox.exe
-tools.remoteproc_gen.script=run_arduino_gen.sh
-tools.remoteproc_gen.upload.params.verbose=
-tools.remoteproc_gen.upload.params.quiet=
-tools.remoteproc_gen.upload.pattern="{busybox}" sh "{path}/{script}" generate "{build.path}/{build.project_name}.elf" "{build.path}/run_arduino_{build.project_name}.sh"
-
-# Debugger configuration (general options)
-# ----------------------------------------
-# EXPERIMENTAL feature:
-# - this is alpha and may be subject to change without notice
-debug.executable={build.path}/{build.project_name}.elf
-debug.toolchain=gcc
-debug.toolchain.path={compiler.path}
-debug.toolchain.prefix=arm-none-eabi-
-debug.server=openocd
-debug.server.openocd.path={runtime.tools.xpack-openocd-0.12.0-1.path}/bin/openocd
-debug.server.openocd.scripts_dir={runtime.tools.xpack-openocd-0.12.0-1.path}/openocd/scripts
-debug.server.openocd.script={build.path}/openocd.cfg
