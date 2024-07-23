@@ -24,6 +24,7 @@ void Serial::print(const char* msg){
 
 	/*Check USB Tx state if not BUSY then operation string*/
 	if (hcdc->TxState == 0){
+
 		/*Copy to serial print buffer*/
 		memcpy(println_buf, msg, len);
 
@@ -49,6 +50,7 @@ void Serial::print(int msg){
 
 	/*Check USB Tx state if not BUSY then operation string*/
 	if (hcdc->TxState == 0){
+
 		/*Copy to serial print buffer*/
 		memcpy(println_buf, tmp_buf, len);
 
@@ -68,6 +70,7 @@ void Serial::println(const char* msg){
 
 	/*Check USB Tx state if not BUSY then operation string*/
 	if (hcdc->TxState == 0){
+
 		/*Create temporary string buffer*/
 		char tmp_buf[128];
 
@@ -96,4 +99,36 @@ void Serial::println(const char* msg){
 
 void Serial::println(int msg){
 
+	/*Create USB_CDC handler use for checking USB Tx state*/
+	USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
+
+	/*Check USB Tx state if not BUSY then operation string*/
+	if (hcdc->TxState == 0){
+
+		/*Create temporary string buffer*/
+		char tmp_buf[128];
+
+		/*Create temporary string pointer*/
+		char* tmp_ptr = tmp_buf;
+
+		/*Clear tmp_buf*/
+		memset(tmp_ptr, '\0', sizeof(tmp_ptr));
+
+		/*Convert int to string*/
+		itoa(msg, tmp_buf, 10);
+
+		/*Copy strings from message to temp location*/
+		//memcpy(tmp_ptr, msg, len);
+
+		/*Concatenate strings with carrier return and line feed */
+		strcat(tmp_ptr,crnl);
+
+		/*Copy to serial print buffer*/
+		memcpy(println_buf, tmp_ptr, strlen(tmp_buf));
+
+		/*Send message via USB*/
+		CDC_Transmit_FS((uint8_t*)println_buf, strlen(tmp_buf));
+
+		while(hcdc->TxState != 0){}
+	}
 }
