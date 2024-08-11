@@ -8,7 +8,9 @@
 class Serial {
   public:
     void print(const char* msg);
+    void print(int);
     void println(const char* msg);
+    void println(int);
 };
 
 #endif
