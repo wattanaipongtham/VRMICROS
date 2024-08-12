@@ -19,13 +19,13 @@ void pinMode(int portPin, int mode){
 	/*Check if GPIO Register High*/
 	if((portPin & GPIOPin_Msk) - 7 > 0){
 
-		/*Reset All bit to Zero Then Set GPIO Mode to GPIO_CRH*/
+		/*Reset All bit to Zero Then Set GPIO Mode for GPIO_CRH*/
 		gpioRegister->CRH &= ~(0xF << ((((portPin & GPIOPin_Msk) - 7) * 4) - 4));
 		gpioRegister->CRH |= ((mode & MODE_Msk) << ((((portPin & GPIOPin_Msk) - 7) * 4) - 4));
 
 	}else{
 
-		/*Reset All bit to Zero Then Set GPIO Mode to GPIO_CRL*/
+		/*Reset All bit to Zero Then Set GPIO Mode for GPIO_CRL*/
 		gpioRegister->CRL &= ~(0xF << ((((portPin & GPIOPin_Msk)) * 4) - 4));
 		gpioRegister->CRL |= ((mode & MODE_Msk) << (((portPin & GPIOPin_Msk)) * 4));
 
