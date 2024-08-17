@@ -22,14 +22,14 @@ recipe.hooks.postbuild.1.pattern.windows="{runtime.tools.STM32Tools.path}/win/bu
 ## C Compile Part
 compiler.c.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -DSTM32 -DSTM32F1 -DSTM32F103C8Tx
+compiler.c.flags=-mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DUSER_VECT_TAB_ADDRESS
 compiler.c.include_path="-I{build.core.path}" "-I{build.core.path}/vrmicros" "-I{build.system.path}/Drivers/CMSIS/Device/ST/STM32F1xx/Include" "-I{build.system.path}/Drivers/CMSIS/Include" "-I{build.core.path}/STM32F1xx_HAL_Driver" "-I{build.core.path}/STM32F1xx_HAL_Driver/Inc" "-I{build.core.path}/STM32F1xx_HAL_Driver/Inc/Legacy" "-I{build.core.path}/STM32F1xx_HAL_Driver/Src" "-I{build.core.path}/STM32_USB_Device_Library/Class/CDC/Inc" "-I{build.core.path}/STM32_USB_Device_Library/Class/CDC/Src" "-I{build.core.path}/STM32_USB_Device_Library/Core/Inc" "-I{build.core.path}/STM32_USB_Device_Library/Core/Src" "-I{build.core.path}/USB_DEVICE/App" "-I{build.core.path}/USB_DEVICE/Target"
 recipe.c.o.pattern="{compiler.c.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.c.include_path} {includes} -c "{source_file}" -o "{object_file}"
 
 ## C++ Compile Part
 compiler.cpp.path={runtime.tools.xpack-arm-none-eabi-gcc.path}/../bin/
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-mcpu=cortex-m3 -std=gnu++11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -DSTM32 -DSTM32F1 -DSTM32F103C8Tx
+compiler.cpp.flags=-mcpu=cortex-m3 -std=gnu++11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DUSER_VECT_TAB_ADDRESS
 compiler.cpp.include_path="-I{build.core.path}" "-I{build.core.path}/vrmicros" "-I{build.system.path}/Drivers/CMSIS/Device/ST/STM32F1xx/Include" "-I{build.system.path}/Drivers/CMSIS/Include" "-I{build.core.path}/STM32F1xx_HAL_Driver/Inc" "-I{build.core.path}/STM32F1xx_HAL_Driver/Inc/Legacy" "-I{build.core.path}/STM32F1xx_HAL_Driver/Src" "-I{build.core.path}/STM32_USB_Device_Library/Class/CDC/Inc" "-I{build.core.path}/STM32_USB_Device_Library/Class/CDC/Src" "-I{build.core.path}/STM32_USB_Device_Library/Core/Inc" "-I{build.core.path}/STM32_USB_Device_Library/Core/Src" "-I{build.core.path}/USB_DEVICE/App" "-I{build.core.path}/USB_DEVICE/Target"
 recipe.cpp.o.pattern="{compiler.cpp.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.cpp.include_path} -c "{source_file}" -o "{object_file}"
 
